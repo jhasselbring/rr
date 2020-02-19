@@ -4,8 +4,7 @@ console.log('Server');
 const WebSocket = require('ws');
 const uuid = require('uuid');
 const os = require('os-utils');
-
-let clients = {};
+let clients = [];
 
 module.exports = flags => {
     const wss = new WebSocket.Server({
@@ -30,7 +29,6 @@ module.exports = flags => {
             // should not be compressed.
         }
     });
-
     function broadcast() {
         let pl = {};
         pl.platform = os.platform();
@@ -40,18 +38,25 @@ module.exports = flags => {
         pl.freememPercentage = parseFloat((os.totalmem() * 100).toFixed(2));
         pl.sysUptime = os.sysUptime();
         pl.processUptime = parseInt(os.processUptime().toFixed(0));
-
         os.cpuUsage(v => {
             pl.cpuUsage = parseFloat((v * 100).toFixed(2));
             console.log(pl);
         });
+        clients.forEach(ws => {
+            ws.send(JSON.stringify(pl));
+        })
     }
-
     wss.on('connection', (ws, req) => {
         let id = uuid.v4();
-        clients[id].push(ws);
+        ws.id = id;
+        clients.push(ws);
         ws.on('close', (code, reason) => {
-            delete clients[id];
+            clients.forEach((v, i) => {
+                console.log('Removed client: ' + id);
+                if (v.id === id) {
+                    clients.splice(i, 1);
+                }
+            })
         });
     });
     setInterval(broadcast, flags.freq);
