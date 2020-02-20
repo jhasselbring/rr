@@ -4,8 +4,9 @@
   "description": "Resource reporter",
   "main": "src/main.js",
   "scripts": {
-    "start": "node ./src/main.js --port=8080",
-    "fast": "node ./src/main.js --port=8080 --freq=1",
+    "broadcast": "node ./src/main.js --port=8080",
+    "broadcast:fast": "node ./src/main.js --port=8080 --freq=1",
+    "listen": "node ./src/main.js --listen=127.0.0.1:8080",
     "test": "mocha"
   },
   "author": "",

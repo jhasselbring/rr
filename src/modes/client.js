@@ -1,6 +1,20 @@
 "use strict";
-console.log('Client');
 /** Import Libs */
-const https = require('https');
-const fs = require('fs');
 const WebSocket = require('ws');
+
+module.exports = flags => {
+    var ws = {};
+    function createConnection(){
+        ws = new WebSocket('ws://' + flags.server);
+    }
+    createConnection();
+    ws.on('message', data =>  {
+        console.log(JSON.parse(data));
+    });
+    ws.on('close', () =>  {
+        createConnection();
+        ws.on('message', data =>  {
+            console.log(JSON.parse(data));
+        });
+    });
+};

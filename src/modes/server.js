@@ -1,5 +1,4 @@
 "use strict";
-console.log('Server');
 /** Import Libs */
 const WebSocket = require('ws');
 const uuid = require('uuid');
@@ -40,7 +39,6 @@ module.exports = flags => {
         pl.processUptime = parseInt(os.processUptime().toFixed(0));
         os.cpuUsage(v => {
             pl.cpuUsage = parseFloat((v * 100).toFixed(2));
-            console.log(pl);
         });
         clients.forEach(ws => {
             ws.send(JSON.stringify(pl));
