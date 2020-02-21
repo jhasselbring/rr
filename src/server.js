@@ -3,9 +3,10 @@
 const WebSocket = require('ws');
 const uuid = require('uuid');
 const os = require('os-utils');
-let clients = [];
+const flags = require("./includes/flags.js");
 
-module.exports = flags => {
+let clients = [];
+(flags => {
     const wss = new WebSocket.Server({
         port: flags.port,
         perMessageDeflate: {
@@ -40,6 +41,7 @@ module.exports = flags => {
         os.cpuUsage(v => {
             pl.cpuUsage = parseFloat((v * 100).toFixed(2));
         });
+        console.log(pl);
         clients.forEach(ws => {
             ws.send(JSON.stringify(pl));
         })
@@ -58,4 +60,4 @@ module.exports = flags => {
         });
     });
     setInterval(broadcast, flags.freq);
-};
+})(flags);

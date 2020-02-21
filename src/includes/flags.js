@@ -10,11 +10,11 @@ flag.defineInteger('freq', 1000, "Set how often the service will broadcast its i
 flag.parse();
 
 let port = flag.get('port');
-let mode = (flag.get('listen') == false) ? 'server': 'client';
+let mode = (flag.get('listen') !== false) ? 'client': 'server';
 let server = flag.get('listen');
 let freq = flag.get('freq');
 
-module.exports = {
+const flags = {
     server,
     port,
     mode,
